@@ -7,7 +7,7 @@ export class SpotifyApi {
     }
 
     public async getMe(): Promise<UserResponse> {
-        return await this.makeRequest("GET", "https://api.spotify.com/v1/me");
+        return await this.makeRequest<UserResponse>("GET", "https://api.spotify.com/v1/me");
     }
 
     private static async authorizeAsUser(clientId: string) {
@@ -34,7 +34,7 @@ export class SpotifyApi {
         return await this.makeRequest<TopTracksResult>("GET", `https://api.spotify.com/v1/artists/${artistId}/top-tracks?market=${this.market}`);
     }
 
-    public async createPlaylist(userId: string, artistName: string, ...trackIds: string[]): Promise<PlaylistCreationResult> {
+    public async createPlaylist(userId: string, artistName: string, trackIds: string[]): Promise<PlaylistCreationResult> {
         const shortRandomString = Math.random().toString(36).substring(2, 15); // So we can tell playlists apart! :)
 
         const result = await this.makeRequest<PlaylistCreationResult>("POST", `https://api.spotify.com/v1/users/${userId}/playlists`, {
@@ -67,7 +67,7 @@ export class SpotifyApi {
         
     public static createClient(clientId: string): SpotifyApi {
         SpotifyApi.authorizeAsUser(clientId); // redirects here for auth!  
-        return new SpotifyApi(); // Ignored due to redirect, returned to please type hints.
+        return new SpotifyApi(); // Ignored due to redirect, returned to please the type hints.
     }
 
     public static createUserAuthenticatedClient(code: string): SpotifyApi {
